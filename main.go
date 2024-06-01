@@ -13,48 +13,95 @@ import (
 	"google.golang.org/api/option"
 )
 
-
-type SafetySetting struct {
-	Category genai.HarmCategory `json:"category"`
-	Threshold genai.HarmBlockThreshold `json:"threshold"`
-}
-
 type Config struct {
-	GEMINI_API_KEY string `json:"GEMINI_API_KEY"`
-	GEMINI_MODEL   string `json:"GEMINI_MODEL"`
+	GEMINI_API_KEY     string `json:"GEMINI_API_KEY"`
+	GEMINI_MODEL       string `json:"GEMINI_MODEL"`
+	SYSTEM_INSTRUCTION string `json:"SYSTEM_INSTRUCTION"`
+	GENERATION_CONFIG  struct {
+		Temperature        float32 `json:"temperature"`
+		Top_p              float32 `json:"top_p"`
+		Top_k              int32   `json:"top_k"`
+		Max_output_tokens  *int32  `json:"max_output_tokens"`
+		Response_mime_type string  `json:"response_mime_type"`
+	} `json:"GENERATION_CONFIG"`
+
+	// you can get safety settings information from,
+	// https://github.com/google/generative-ai-go/blob/v0.13.0/genai/generativelanguagepb_veneer.gen.go#L817
+	SAFETY_SETTINGS []struct {
+		Threshold string `json:"threshold"`
+	} `json:"SAFETY_SETTINGS"`
 }
 
 func main() {
+	// if you intend to use a different file for json specify it here
 	const configFile = "keys.json"
 
 	file, err := os.Open(configFile)
 	if err != nil {
 		log.Fatal("Error opening config file: ", err)
 	}
-
 	defer file.Close()
+
 	var config Config
 
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&config)
 
-
 	if err != nil {
 		log.Fatal("Error decoding config JSON: ", err)
 	}
 
-	apiKey := config.GEMINI_API_KEY
-	generativeModel := config.GEMINI_MODEL
-
 	ctx := context.Background()
-	client, err := createClient(ctx, apiKey)
+	client, err := createClient(ctx, config.GEMINI_API_KEY)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
 
-	model := client.GenerativeModel(generativeModel)
-	// model.SafetySettings = config.SAFETY_SETTINGS
+	model := client.GenerativeModel(config.GEMINI_MODEL)
+	model.SetTemperature(config.GENERATION_CONFIG.Temperature)
+	model.SetTopP(config.GENERATION_CONFIG.Top_p)
+	model.SetTopK(config.GENERATION_CONFIG.Top_k)
+	model.ResponseMIMEType = config.GENERATION_CONFIG.Response_mime_type
+	model.MaxOutputTokens = config.GENERATION_CONFIG.Max_output_tokens
+	model.SystemInstruction = &genai.Content{
+		Parts: []genai.Part{genai.Text(config.SYSTEM_INSTRUCTION)},
+	}
+
+	var thresholds = []uint8{2, 2, 2, 2}
+	for index, t := range config.SAFETY_SETTINGS {
+		switch {
+		case t.Threshold == "HarmBlockUnspecified" || t.Threshold == "HARM_BLOCK_THRESHOLD_UNSPECIFIED":
+			thresholds[index] = 0
+		case t.Threshold == "HarmBlockLowAndAbove" || t.Threshold == "BLOCK_LOW_AND_ABOVE":
+			thresholds[index] = 1
+		case t.Threshold == "HarmBlockMediumAndAbove" || t.Threshold == "BLOCK_MEDIUM_AND_ABOVE":
+			thresholds[index] = 2
+		case t.Threshold == "HarmBlockOnlyHigh" || t.Threshold == "BLOCK_ONLY_HIGH":
+			thresholds[index] = 3
+		case t.Threshold == "HarmBlockNone" || t.Threshold == "BLOCK_NONE":
+			thresholds[index] = 4
+		}
+	}
+
+	model.SafetySettings = []*genai.SafetySetting{
+		{
+			Category:  genai.HarmCategoryHarassment,
+			Threshold: genai.HarmBlockThreshold(thresholds[0]),
+		},
+		{
+			Category:  genai.HarmCategoryHateSpeech,
+			Threshold: genai.HarmBlockThreshold(thresholds[1]),
+		},
+		{
+			Category:  genai.HarmCategorySexuallyExplicit,
+			Threshold: genai.HarmBlockThreshold(thresholds[2]),
+		},
+		{
+			Category:  genai.HarmCategoryDangerousContent,
+			Threshold: genai.HarmBlockThreshold(thresholds[3]),
+		},
+	}
 
 	if len(os.Args) > 1 && strings.ToLower(os.Args[1]) == "--image" {
 		err := generateTextFromImage(ctx, model)
@@ -127,6 +174,9 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 	var userPrompt string
 	scanner := bufio.NewScanner(os.Stdin)
 
+	cs := model.StartChat()
+	cs.History = []*genai.Content{}
+
 	for {
 		fmt.Print("The Prompt(Or `Image Mode` to switch): ")
 		scanner.Scan()
@@ -143,15 +193,11 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 			generateTextFromPrompt(ctx, model)
 		}
 
-		cs := model.StartChat()
-		cs.History = []*genai.Content{}
-
 		resp, err := cs.SendMessage(ctx, genai.Text(userPrompt))
 		if err != nil {
 			fmt.Println("Error sending message: ", err)
 			continue
 		}
-
 		printResponse(resp)
 	}
 }
@@ -165,4 +211,5 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		}
 	}
 	fmt.Println()
+	fmt.Println("****************************************************************")
 }
