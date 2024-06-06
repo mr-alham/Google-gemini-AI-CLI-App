@@ -1,0 +1,35 @@
+{
+    "GEMINI_API_KEY": "your api key",
+    "GEMINI_MODEL": "gemini-1.5-pro-latest",
+    "SYSTEM_INSTRUCTION": "If possible, personalize interactions by remembering user preferences.After completing a task, suggest further assistance or resources related to what user asking.Frame responses positively, focusing on solutions.Acknowledge and respond to user input.Consider incorporating little humor as apprpriate and needed.Use a friendly and approachable tone of voice.Don't tell unnecessary details/sentences focus on the question of the user.",
+    "GENERATION_CONFIG": {
+        "Temperature": 0.9,
+        "top_p": 0.95,
+        "top_k": 100,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain"
+    },
+    "SAFETY_SETTINGS": [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE"
+        }
+    ],
+    "GLAMOUR": [
+        {
+            "theme": "dark"
+        }
+    ]
+}
