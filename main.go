@@ -20,7 +20,7 @@ import (
 
 // getting configuration data from the json file
 type Config struct {
-	GeminiApiKey      string `json:"GEMINI_API_KEY"`
+	GeminiAPIKey      string `json:"GEMINI_API_KEY"`
 	GeminiModel       string `json:"GEMINI_MODEL"`
 	SystemInstruction string `json:"SYSTEM_INSTRUCTION"`
 	GenerationConfig  struct {
@@ -39,7 +39,10 @@ type Config struct {
 }
 
 func main() {
-	welcomeBanner()
+	err := welcomeBanner()
+	if err != nil {
+		fmt.Println("Error:")
+	}
 
 	config, err := loadConfig()
 	if err != nil {
@@ -48,14 +51,14 @@ func main() {
 
 	ctx := context.Background()
 
-	client, err := createClient(ctx, config.GeminiApiKey)
+	client, err := createClient(ctx, config.GeminiAPIKey)
 	if err != nil {
 		log.Panic("Error creating client:", err)
 	}
 
 	defer client.Close()
 
-	model, err := createAndConfigureClient(config, ctx)
+	model, err := createAndConfigureClient(ctx, config)
 	if err != nil {
 		log.Panic("Error Creating and Configuring client:")
 	}
@@ -125,8 +128,8 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 		scanner.Scan()
 		userPrompt = scanner.Text()
 
-		if error := scanner.Err(); error != nil {
-			fmt.Println("Error scanning prompt: ", error)
+		if Err := scanner.Err(); Err != nil {
+			fmt.Println("Error scanning prompt: ", Err)
 			continue
 		}
 
@@ -172,7 +175,10 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 			continue
 		} else if strings.ToLower(userPrompt) == "image mode" {
 			fmt.Println()
-			generateTextFromImage(ctx, model)
+			err := generateTextFromImage(ctx, model)
+			if err != nil {
+				fmt.Println("Error:")
+			}
 		}
 
 		resp, err := cs.SendMessage(ctx, genai.Text(userPrompt))
@@ -485,7 +491,7 @@ func loadConfig() (*Config, error) {
 		log.Panic("Error decoding config JSON: ", err)
 	}
 
-	if config.GeminiApiKey == "your gemini api key" {
+	if config.GeminiAPIKey == "your gemini api key" {
 		fmt.Println("To use this chatbot you need a API key,")
 		fmt.Println("If you don't posses a Gemini-API key, get one from `https://aistudio.google.com/app/apikey`")
 		log.Panic("Then paste the key in `keys.json` as showed in the documentation.")
@@ -494,9 +500,9 @@ func loadConfig() (*Config, error) {
 	return &config, nil
 }
 
-func createAndConfigureClient(config *Config, ctx context.Context) (*genai.GenerativeModel, error) {
+func createAndConfigureClient(ctx context.Context, config *Config) (*genai.GenerativeModel, error) {
 
-	client, err := genai.NewClient(ctx, option.WithAPIKey(config.GeminiApiKey))
+	client, err := genai.NewClient(ctx, option.WithAPIKey(config.GeminiAPIKey))
 	if err != nil {
 		log.Panic("Error creating client:", err)
 	}
@@ -514,12 +520,12 @@ func createAndConfigureClient(config *Config, ctx context.Context) (*genai.Gener
 	return model, nil
 }
 
-func configureSafetySettings(SafetySettings []struct {
+func configureSafetySettings(safetySettings []struct {
 	Threshold string `json:"threshold"`
 }) []*genai.SafetySetting {
 
 	var thresholds = []uint8{2, 2, 2, 2}
-	for index, t := range SafetySettings {
+	for index, t := range safetySettings {
 		switch {
 		case t.Threshold == "HarmBlockUnspecified" || t.Threshold == "HARM_BLOCK_THRESHOLD_UNSPECIFIED":
 			thresholds[index] = 0
@@ -544,14 +550,20 @@ func configureSafetySettings(SafetySettings []struct {
 
 func handleArgs(ctx context.Context, model *genai.GenerativeModel, args []string) {
 
-	if strings.ToLower(args[1]) == "--image" {
+	switch strings.ToLower(args[1]) {
+	case "--image":
 		err := generateTextFromImage(ctx, model)
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println("Error:")
 		}
-	} else if os.Args[1] == "--help" || args[1] == "-h" {
+	case "--help":
 		help()
-	} else {
+	case "-h":
+		help()
+	default:
+		fmt.Println("Error `" + args[1] + "` not identified.")
+		fmt.Println("Redirecting to Text-to-Text Model...")
+		fmt.Println()
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
 			fmt.Println("Error:")
