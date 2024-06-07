@@ -9,15 +9,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/glamour/ansi"
 	"github.com/google/generative-ai-go/genai"
-	"golang.org/x/crypto/ssh/terminal"
+	"google.golang.org/api/option"
 
 	"github.com/atotto/clipboard"
-	"google.golang.org/api/option"
+	"github.com/charmbracelet/glamour"
+	"github.com/charmbracelet/glamour/ansi"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
+// getting configuration data from the json file
 type Config struct {
 	GEMINI_API_KEY     string `json:"GEMINI_API_KEY"`
 	GEMINI_MODEL       string `json:"GEMINI_MODEL"`
@@ -40,10 +41,10 @@ type Config struct {
 func main() {
 	width := terminalWidth()
 	titleA := "---------------🝔---------------"
-	title := "Gemini-AI on Terminal"
+	title := "⚙️  Gemini-AI on Terminal ⚙️"
 
 	spaceA := strings.Repeat(" ", ((width - 31) / 2))
-	spaceTitle := strings.Repeat(" ", ((width - 22) / 2))
+	spaceTitle := strings.Repeat(" ", ((width - 27) / 2))
 
 	fmt.Println("\033[1;38;5;178m" + spaceA + titleA + "\033[0;37m")
 	fmt.Println("\033[1;38;5;38m" + spaceTitle + title + "\033[0m")
@@ -54,7 +55,7 @@ func main() {
 
 	file, err := os.Open(configFile)
 	if err != nil {
-		log.Fatal("Error opening config file: ", err)
+		log.Panic("Error opening config file: ", err)
 	}
 	defer file.Close()
 
@@ -64,13 +65,18 @@ func main() {
 	err = decoder.Decode(&config)
 
 	if err != nil {
-		log.Fatal("Error decoding config JSON: ", err)
+		log.Panic("Error decoding config JSON: ", err)
 	}
 
 	ctx := context.Background()
+	if config.GEMINI_API_KEY == "your gemini api key" {
+		fmt.Println("To use this chatbot you need a API key,")
+		fmt.Println("If you don't posses a Gemini-API key, get one from `https://aistudio.google.com/app/apikey`")
+		log.Panic("Then paste the key in `keys.json` as showed in the documentation.")
+	}
 	client, err := createClient(ctx, config.GEMINI_API_KEY)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic("Error creating client:", err)
 	}
 	defer client.Close()
 
@@ -119,15 +125,16 @@ func main() {
 		},
 	}
 
-	if len(os.Args) > 1 && strings.ToLower(os.Args[1]) == "--image" {
-		err := generateTextFromImage(ctx, model)
-		if err != nil {
-			log.Fatal(err)
+	if len(os.Args) > 1 {
+		if strings.ToLower(os.Args[1]) == "--image" {
+			generateTextFromImage(ctx, model)
+		} else if os.Args[1] == "--help" || os.Args[1] == "-h" {
+			help()
 		}
 	} else {
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 	}
 }
@@ -168,6 +175,7 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 		}
 
 		if strings.ToLower(pathToImage) == "text mode" {
+			fmt.Println()
 			generateTextFromPrompt(ctx, model)
 		}
 
@@ -177,7 +185,7 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 			continue
 		}
 
-		fmt.Print("\033[0;1;38;5;28mThe Prompt: \033[0;38;5;254m")
+		fmt.Print("\033[0;1;38;5;28mPrompt: \033[0;38;5;254m")
 		scanner.Scan()
 		userPrompt = scanner.Text()
 
@@ -215,7 +223,7 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 	cs.History = []*genai.Content{}
 
 	for {
-		fmt.Print("\033[0;1;38;5;28mThe Prompt: \033[0;38;5;254m")
+		fmt.Print("\033[0;1;38;5;28mPrompt: \033[0;38;5;254m")
 		scanner.Scan()
 		userPrompt = scanner.Text()
 
@@ -227,6 +235,7 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 			fmt.Println("The Prompt is empty.")
 			continue
 		} else if strings.ToLower(userPrompt) == "image mode" {
+			fmt.Println()
 			generateTextFromImage(ctx, model)
 		}
 
@@ -329,7 +338,7 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		},
 		HorizontalRule: ansi.StylePrimitive{
 			Color:  stringPtr("240"),
-			Format: "\n----🝔----\n",
+			Format: "\n🝔------------------------------🝔\n",
 		},
 		Item: ansi.StylePrimitive{
 			BlockPrefix: "🟆 ",
@@ -477,6 +486,8 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		glamour.WithStyles(customStylingConfig),
 	)
 
+	fmt.Print("\033[0;1;38;5;28m\nResponse: \033[0;38;5;254m")
+
 	for _, candidate := range resp.Candidates {
 		if candidate.Content != nil {
 			for _, part := range candidate.Content.Parts {
@@ -485,34 +496,30 @@ func printResponse(resp *genai.GenerateContentResponse) {
 					out, err := r.Render(string(p))
 					fmt.Print(out)
 					if err != nil {
-						log.Fatal("error writing response: ", err)
+						log.Panic("error writing response: ", err)
 					}
 				case genai.Blob:
 					out, err := r.Render(fmt.Sprintf("Blob: MIMEType=%s, DataLength=%d", p.MIMEType, len(p.Data)))
 					if err != nil {
-						log.Fatal("error writing response: ", err)
+						log.Panic("error writing response: ", err)
 					}
 					fmt.Print(out)
 				}
 			}
 		}
 	}
-	// fmt.Println(strings.Repeat("-", width-3))
-	fmt.Println(strings.Repeat("─", width-3), "\033[0;37m")
-	// fmt.Println(r.Render(string("---")))
+	fmt.Println("\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m")
 }
 
-func boolPtr(b bool) *bool {
-	return &b
+func help() {
+	// write a man page for the script
 }
 
-func stringPtr(s string) *string {
-	return &s
-}
+func boolPtr(b bool) *bool { return &b }
 
-func uintPtr(u uint) *uint {
-	return &u
-}
+func stringPtr(s string) *string { return &s }
+
+func uintPtr(u uint) *uint { return &u }
 
 func terminalWidth() int {
 	width, _, err := terminal.GetSize(int(os.Stdout.Fd()))
