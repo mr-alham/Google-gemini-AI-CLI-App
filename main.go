@@ -556,6 +556,11 @@ func handleArgs(ctx context.Context, model *genai.GenerativeModel, args []string
 		if err != nil {
 			fmt.Println("Error:")
 		}
+	case "--text":
+		err := generateTextFromPrompt(ctx, model)
+		if err != nil {
+			fmt.Println("Error:")
+		}
 	case "--help":
 		help()
 	case "-h":
@@ -572,7 +577,42 @@ func handleArgs(ctx context.Context, model *genai.GenerativeModel, args []string
 }
 
 func help() {
-	// write a man page for the script
+	width := terminalWidth()
+
+	fmt.Println("\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m")
+	fmt.Println("\033[0;1;37mSYNOPSIS")
+	fmt.Println("\033[0;32m\tgemini\033[0;37m [OPTIONS]")
+	fmt.Println()
+	fmt.Println("\033[0;1;37mDESCRIPTION")
+	fmt.Println("\033[0;32m\tThe `gemini` allows you to interact with the Gemini AI directly from your terminal.")
+	fmt.Println("\tversatile tool supports both text-to-text and multimodal (text-and-image) interactions,")
+	fmt.Println("\tincluding colorful engaging output with code syntax highlighting")
+	fmt.Println("\tenabling you to generate content based on text prompts or image inputs.")
+	fmt.Println()
+	fmt.Println("\033[0;1;37mOPTIONS")
+	fmt.Println("\033[0;1;37m\t--text")
+	fmt.Println("\033[0;32m\t\tStart Conversation with the Text-to-Text Mode. (Default)")
+	fmt.Println("\033[0;1;37m\t--image")
+	fmt.Println("\033[0;32m\t\tStart Conversation with the Multi-Mode Model.")
+	fmt.Println("\033[0;32m\t\tThis model will allow you to give inputs as Text as well as Image")
+	fmt.Println("\033[0;1;32m\t\t- When asking for the path of the image you can,")
+	fmt.Println("\033[0;32m\t\t\t- Type the path (absolute path)")
+	fmt.Println("\033[0;32m\t\t\t- Copy the image path to the Clipboard and hit Enter")
+	fmt.Println("\033[0;32m\t\t\t- Drag and drop the image to the Terminal")
+	fmt.Println("\033[0;1;37m\t-h, --help")
+	fmt.Println("\033[0;32m\t\tShows this help message and exit.")
+	fmt.Println()
+	fmt.Println("\033[0;1;37mDocumentation")
+	fmt.Println("\033[0;32m\tTo see the documentation visit, \033[0;3;35mhttps://github.com/mr-alham/Google-gemini-AI-CLI-App")
+	fmt.Println()
+	fmt.Println("\033[0;1;37mAUTHOR")
+	fmt.Println("\033[0;32m\tWritten by: \033[0;37mALHAM")
+	fmt.Println("\033[0;32m\tGithub: \033[0;3;35mhttps://github.com/mr-alham/")
+	fmt.Println("\033[0;32m\tTwitter:\033[0;3;35mhttps://www.twitter.com/@alham__aa")
+	fmt.Println("\033[0;32m\tEmail:  \033[0;37malham@duck.com")
+	fmt.Println()
+	fmt.Println("\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m")
+
 }
 
 func boolPtr(b bool) *bool { return &b }
