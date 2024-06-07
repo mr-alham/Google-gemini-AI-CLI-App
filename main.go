@@ -15,126 +15,59 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/glamour/ansi"
-	"golang.org/x/crypto/ssh/terminal"
+	terminal "golang.org/x/term"
 )
 
 // getting configuration data from the json file
 type Config struct {
-	GEMINI_API_KEY     string `json:"GEMINI_API_KEY"`
-	GEMINI_MODEL       string `json:"GEMINI_MODEL"`
-	SYSTEM_INSTRUCTION string `json:"SYSTEM_INSTRUCTION"`
-	GENERATION_CONFIG  struct {
-		Temperature        float32 `json:"temperature"`
-		Top_p              float32 `json:"top_p"`
-		Top_k              int32   `json:"top_k"`
-		Max_output_tokens  *int32  `json:"max_output_tokens"`
-		Response_mime_type string  `json:"response_mime_type"`
+	GeminiApiKey      string `json:"GEMINI_API_KEY"`
+	GeminiModel       string `json:"GEMINI_MODEL"`
+	SystemInstruction string `json:"SYSTEM_INSTRUCTION"`
+	GenerationConfig  struct {
+		Temperature      float32 `json:"temperature"`
+		TopP             float32 `json:"top_p"`
+		TopK             int32   `json:"top_k"`
+		MaxOutputTokens  *int32  `json:"max_output_tokens"`
+		ResponseMimeType string  `json:"response_mime_type"`
 	} `json:"GENERATION_CONFIG"`
 
 	// you can get safety settings information from,
 	// https://github.com/google/generative-ai-go/blob/v0.13.0/genai/generativelanguagepb_veneer.gen.go#L817
-	SAFETY_SETTINGS []struct {
+	SafetySettings []struct {
 		Threshold string `json:"threshold"`
 	} `json:"SAFETY_SETTINGS"`
 }
 
 func main() {
-	width := terminalWidth()
-	titleA := "---------------🝔---------------"
-	title := "⚙️  Gemini-AI on Terminal ⚙️"
+	welcomeBanner()
 
-	spaceA := strings.Repeat(" ", ((width - 31) / 2))
-	spaceTitle := strings.Repeat(" ", ((width - 27) / 2))
-
-	fmt.Println("\033[1;38;5;178m" + spaceA + titleA + "\033[0;37m")
-	fmt.Println("\033[1;38;5;38m" + spaceTitle + title + "\033[0m")
-	fmt.Println("\033[1;38;5;178m" + spaceA + titleA + "\033[0;37m")
-
-	// if you intend to use a different file for json specify it here
-	const configFile = "Gemini_Ai_Config/keys.json"
-
-	file, err := os.Open(configFile)
+	config, err := loadConfig()
 	if err != nil {
-		log.Panic("Error opening config file: ", err)
-	}
-	defer file.Close()
-
-	var config Config
-
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&config)
-
-	if err != nil {
-		log.Panic("Error decoding config JSON: ", err)
+		log.Panic("Error loading config:")
 	}
 
 	ctx := context.Background()
-	if config.GEMINI_API_KEY == "your gemini api key" {
-		fmt.Println("To use this chatbot you need a API key,")
-		fmt.Println("If you don't posses a Gemini-API key, get one from `https://aistudio.google.com/app/apikey`")
-		log.Panic("Then paste the key in `keys.json` as showed in the documentation.")
-	}
-	client, err := createClient(ctx, config.GEMINI_API_KEY)
+
+	client, err := createClient(ctx, config.GeminiApiKey)
 	if err != nil {
 		log.Panic("Error creating client:", err)
 	}
+
 	defer client.Close()
 
-	model := client.GenerativeModel(config.GEMINI_MODEL)
-	model.SetTemperature(config.GENERATION_CONFIG.Temperature)
-	model.SetTopP(config.GENERATION_CONFIG.Top_p)
-	model.SetTopK(config.GENERATION_CONFIG.Top_k)
-	model.MaxOutputTokens = config.GENERATION_CONFIG.Max_output_tokens
-	model.ResponseMIMEType = config.GENERATION_CONFIG.Response_mime_type
-	model.SystemInstruction = &genai.Content{
-		Parts: []genai.Part{genai.Text(config.SYSTEM_INSTRUCTION)},
+	model, err := createAndConfigureClient(config, ctx)
+	if err != nil {
+		log.Panic("Error Creating and Configuring client:")
 	}
 
-	var thresholds = []uint8{2, 2, 2, 2}
-	for index, t := range config.SAFETY_SETTINGS {
-		switch {
-		case t.Threshold == "HarmBlockUnspecified" || t.Threshold == "HARM_BLOCK_THRESHOLD_UNSPECIFIED":
-			thresholds[index] = 0
-		case t.Threshold == "HarmBlockLowAndAbove" || t.Threshold == "BLOCK_LOW_AND_ABOVE":
-			thresholds[index] = 1
-		case t.Threshold == "HarmBlockMediumAndAbove" || t.Threshold == "BLOCK_MEDIUM_AND_ABOVE":
-			thresholds[index] = 2
-		case t.Threshold == "HarmBlockOnlyHigh" || t.Threshold == "BLOCK_ONLY_HIGH":
-			thresholds[index] = 3
-		case t.Threshold == "HarmBlockNone" || t.Threshold == "BLOCK_NONE":
-			thresholds[index] = 4
-		}
-	}
-
-	model.SafetySettings = []*genai.SafetySetting{
-		{
-			Category:  genai.HarmCategoryHarassment,
-			Threshold: genai.HarmBlockThreshold(thresholds[0]),
-		},
-		{
-			Category:  genai.HarmCategoryHateSpeech,
-			Threshold: genai.HarmBlockThreshold(thresholds[1]),
-		},
-		{
-			Category:  genai.HarmCategorySexuallyExplicit,
-			Threshold: genai.HarmBlockThreshold(thresholds[2]),
-		},
-		{
-			Category:  genai.HarmCategoryDangerousContent,
-			Threshold: genai.HarmBlockThreshold(thresholds[3]),
-		},
-	}
+	model.SafetySettings = configureSafetySettings(config.SafetySettings)
 
 	if len(os.Args) > 1 {
-		if strings.ToLower(os.Args[1]) == "--image" {
-			generateTextFromImage(ctx, model)
-		} else if os.Args[1] == "--help" || os.Args[1] == "-h" {
-			help()
-		}
+		handleArgs(ctx, model, os.Args)
 	} else {
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
-			log.Panic(err)
+			fmt.Println("Error:")
 		}
 	}
 }
@@ -176,7 +109,10 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 
 		if strings.ToLower(pathToImage) == "text mode" {
 			fmt.Println()
-			generateTextFromPrompt(ctx, model)
+			err := generateTextFromPrompt(ctx, model)
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
 		}
 
 		imgData, err := os.ReadFile(pathToImage)
@@ -189,8 +125,8 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 		scanner.Scan()
 		userPrompt = scanner.Text()
 
-		if err := scanner.Err(); err != nil {
-			fmt.Println("Error scanning prompt: ", err)
+		if error := scanner.Err(); error != nil {
+			fmt.Println("Error scanning prompt: ", error)
 			continue
 		}
 
@@ -479,12 +415,16 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		},
 	}
 
-	r, _ := glamour.NewTermRenderer(
+	r, err := glamour.NewTermRenderer(
 		glamour.WithStandardStyle("dark"),
 		glamour.WithEmoji(), glamour.WithPreservedNewLines(),
 		glamour.WithWordWrap(width),
 		glamour.WithStyles(customStylingConfig),
 	)
+
+	if err != nil {
+		fmt.Println("Error rendering glamour output", err)
+	}
 
 	fmt.Print("\033[0;1;38;5;28m\nResponse: \033[0;38;5;254m")
 
@@ -509,6 +449,114 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		}
 	}
 	fmt.Println("\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m")
+}
+
+func welcomeBanner() error {
+	width := terminalWidth()
+	titleA := "---------------🝔---------------"
+	title := "⚙️  Gemini-AI on Terminal ⚙️"
+
+	spaceA := strings.Repeat(" ", ((width - 31) / 2))
+	spaceTitle := strings.Repeat(" ", ((width - 27) / 2))
+
+	fmt.Println("\033[1;38;5;178m" + spaceA + titleA + "\033[0;37m")
+	fmt.Println("\033[1;38;5;38m" + spaceTitle + title + "\033[0m")
+	fmt.Println("\033[1;38;5;178m" + spaceA + titleA + "\033[0;37m")
+
+	return nil
+}
+
+func loadConfig() (*Config, error) {
+	// if you intend to use a different file for json specify it here
+	const configFile = "Gemini_Ai_Config/keys.json"
+
+	file, err := os.Open(configFile)
+	if err != nil {
+		log.Panic("Error opening config file: ", err)
+	}
+	defer file.Close()
+
+	var config Config
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
+
+	if err != nil {
+		log.Panic("Error decoding config JSON: ", err)
+	}
+
+	if config.GeminiApiKey == "your gemini api key" {
+		fmt.Println("To use this chatbot you need a API key,")
+		fmt.Println("If you don't posses a Gemini-API key, get one from `https://aistudio.google.com/app/apikey`")
+		log.Panic("Then paste the key in `keys.json` as showed in the documentation.")
+	}
+
+	return &config, nil
+}
+
+func createAndConfigureClient(config *Config, ctx context.Context) (*genai.GenerativeModel, error) {
+
+	client, err := genai.NewClient(ctx, option.WithAPIKey(config.GeminiApiKey))
+	if err != nil {
+		log.Panic("Error creating client:", err)
+	}
+
+	model := client.GenerativeModel(config.GeminiModel)
+	model.SetTemperature(config.GenerationConfig.Temperature)
+	model.SetTopP(config.GenerationConfig.TopP)
+	model.SetTopK(config.GenerationConfig.TopK)
+	model.MaxOutputTokens = config.GenerationConfig.MaxOutputTokens
+	model.ResponseMIMEType = config.GenerationConfig.ResponseMimeType
+	model.SystemInstruction = &genai.Content{
+		Parts: []genai.Part{genai.Text(config.SystemInstruction)},
+	}
+
+	return model, nil
+}
+
+func configureSafetySettings(SafetySettings []struct {
+	Threshold string `json:"threshold"`
+}) []*genai.SafetySetting {
+
+	var thresholds = []uint8{2, 2, 2, 2}
+	for index, t := range SafetySettings {
+		switch {
+		case t.Threshold == "HarmBlockUnspecified" || t.Threshold == "HARM_BLOCK_THRESHOLD_UNSPECIFIED":
+			thresholds[index] = 0
+		case t.Threshold == "HarmBlockLowAndAbove" || t.Threshold == "BLOCK_LOW_AND_ABOVE":
+			thresholds[index] = 1
+		case t.Threshold == "HarmBlockMediumAndAbove" || t.Threshold == "BLOCK_MEDIUM_AND_ABOVE":
+			thresholds[index] = 2
+		case t.Threshold == "HarmBlockOnlyHigh" || t.Threshold == "BLOCK_ONLY_HIGH":
+			thresholds[index] = 3
+		case t.Threshold == "HarmBlockNone" || t.Threshold == "BLOCK_NONE":
+			thresholds[index] = 4
+		}
+	}
+
+	return []*genai.SafetySetting{
+		{Category: genai.HarmCategoryHarassment, Threshold: genai.HarmBlockThreshold(thresholds[0])},
+		{Category: genai.HarmCategoryHateSpeech, Threshold: genai.HarmBlockThreshold(thresholds[1])},
+		{Category: genai.HarmCategorySexuallyExplicit, Threshold: genai.HarmBlockThreshold(thresholds[2])},
+		{Category: genai.HarmCategoryDangerousContent, Threshold: genai.HarmBlockThreshold(thresholds[3])},
+	}
+}
+
+func handleArgs(ctx context.Context, model *genai.GenerativeModel, args []string) {
+
+	if strings.ToLower(args[1]) == "--image" {
+		err := generateTextFromImage(ctx, model)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else if os.Args[1] == "--help" || args[1] == "-h" {
+		help()
+	} else {
+		err := generateTextFromPrompt(ctx, model)
+		if err != nil {
+			fmt.Println("Error:")
+		}
+	}
 }
 
 func help() {
