@@ -1,5 +1,5 @@
 ---
-name: Check the Quality of the Code
+name: Check Code Quality
 
 on:
   push:
@@ -10,16 +10,14 @@ on:
 permissions: read-all
 
 jobs:
-  # checking the quality of the code
   Super-Linter:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the repository
+      - name: Checkout The Repository
         uses: actions/checkout@v4
 
-      - name: Install and run super-linter
+      - name: Install and Run Super-Linter
         uses: github/super-linter@v6
         env:
           DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
