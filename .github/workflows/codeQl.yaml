@@ -1,5 +1,5 @@
 ---
-name: Check the Quality of the Code
+name: Scan for security vulnerabilities
 
 on:
   push:
@@ -10,20 +10,6 @@ on:
 permissions: read-all
 
 jobs:
-  # checking the quality of the code
-  Super-Linter:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
-
-      - name: Install and run super-linter
-        uses: github/super-linter@v6
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-
   # find security vulnerabilities in the code
   analyze:
     name: Analyze security vulnerabilities
