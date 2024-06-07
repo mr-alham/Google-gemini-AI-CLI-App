@@ -1,0 +1,56 @@
+---
+name: Check the Quality of the Code
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+permissions: read-all
+
+jobs:
+  # checking the quality of the code
+  Super-Linter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Install and run super-linter
+        uses: github/super-linter@v6
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+
+  # find security vulnerabilities in the code
+  analyze:
+    name: Analyze security vulnerabilities
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      security-events: write
+
+      packages: read
+
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: go
+          build-mode: autobuild
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language: go"
