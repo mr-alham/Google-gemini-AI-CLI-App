@@ -1,5 +1,5 @@
 ---
-name: Scan for security vulnerabilities
+name: Scan for Security Vulnerabilities
 
 on:
   push:
