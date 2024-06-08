@@ -39,8 +39,8 @@ type Config struct {
 }
 
 func configFile() (string, error) {
-	path1 := "/usr/local/etc/Gemini/keys.json"
-	path2 := "Gemini/keys.json"
+	path1 := "/usr/local/etc/gemini.conf.d/keys.json"
+	path2 := "gemini.conf.d/keys.json"
 
 	if _, err := os.Stat(path1); err == nil {
 		return path1, nil
