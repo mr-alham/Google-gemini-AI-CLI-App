@@ -278,4 +278,4 @@ Written and maintaining by Alham
 
 * GitHub : [mr-alham](https://github.com/mr-alham)
 * Twitter (X) : [@alham__aa](https://twitter.com/@alham__aa)
-* Email : [alham@duck.com](mailto:alham@duck.com)
+* Email : [alham@duck.com](mailto:alham@duck.com?subject=Github%20Google-gemini-AI-CLI-App&body=Hello!)
