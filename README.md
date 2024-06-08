@@ -16,6 +16,8 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 
 * [Configuration](#configuration)
   * [Configuration Explanation](#configuration-explanation)
+  * [Safety]()
+    
 * [Usage](#usage)
 
 * [Command-Line Arguments](#command-line-arguments)
@@ -129,17 +131,18 @@ The application can be configured with a single configuration file `keys.json`. 
 
 ### Configuration Explanation
 
-GEMINI_API_KEY
+* **GEMINI_API_KEY**
 
-  : Your API key for accessing the Gemini AI services. This is required to authenticate your requests.
+  * Your API key for accessing the Gemini AI services. This is required to authenticate your requests.
     Replace `your gemini api key` with your API key
+    
     ```json
-    "GEMINI_API_KEY": "your gemini api key"
+    { "GEMINI_API_KEY": "your gemini api key" }
     ```
+    
+* **GEMINI_Model**
 
-GEMINI_Model
-
-  : Generative AI models are able to create content from varying types of data input including text, images and audio.
+  * Generative AI models are able to create content from varying types of data input including text, images and audio.
 
   | Model                  | Input                     | Optimized for                                                                                                         |
   |------------------------|---------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -148,29 +151,31 @@ GEMINI_Model
   |gemini-1.0-pro          |Text                       |Natural language tasks, multi-turn text and code chat, and code generation                                             |
   |gemini-pro-vision       |Audio, Image,Video and Text|Visual-related tasks, like generating image descriptions or identifying objects in images                              |
 
-  SYSTEM_INSTRUCTION
+* **SYSTEM_INSTRUCTION**
 
-  : System instructions enable users to steer the behavior of the model based on their specific needs and use cases
+  * System instructions enable users to steer the behavior of the model based on their specific needs and use cases
+      
       ```json
       "SYSTEM_INSTRUCTION": "You are a cat. Your name is Neko."
       ```
 
-  Temperature
-  : The temperature controls the degree of randomness in token selection
+* **Temperature**
+  
+  * The temperature controls the degree of randomness in token selection
   The temperature can be changed in the range of 0 to 1
 
-  top_p
+* **top_p**
 
-  : model alters the way tokens are selected for output. It involves selecting tokens from the most probable to the least probable until their cumulative probability equals the topP value.
+  * model alters the way tokens are selected for output. It involves selecting tokens from the most probable to the least probable until their cumulative probability equals the topP value.
   For example, if tokens A, B, and C have probabilities of 0.3, 0.2, and 0.1, and the topP value is 0.5, the model picks either A or B as the next token using temperature sampling, excluding C. The default topP value is 0.95. This parameter helps filter the most probable tokens and exclude less probable ones.
 
-top_K
+* **top_K**
 
-  : determines the number of the most probable tokens to be considered for output selection. A topK value of 1 (greedy decoding) selects the most probable token, while a topK of 3 selects from the top 3 probabilities. This helps narrow down the options for the next token during the generation process.
+  * determines the number of the most probable tokens to be considered for output selection. A topK value of 1 (greedy decoding) selects the most probable token, while a topK of 3 selects from the top 3 probabilities. This helps narrow down the options for the next token during the generation process.
 
-  max_output_tokens
+* **max_output_tokens**
 
-  : Specifies the maximum number of tokens that can be generated in the response.
+  * Specifies the maximum number of tokens that can be generated in the response.
   A token is approximately four characters. 100 tokens correspond to roughly 60-80 words
 
 #### Safety Settings
