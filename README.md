@@ -18,7 +18,7 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
   * [Configuration Explanation](#configuration-explanation)
 * [Usage](#usage)
 
-* [Command Line Arguments](#command-line-arguments)
+* [Command-Line Arguments](#command-line-arguments)
 
 * [Examples](#examples)
 
@@ -161,7 +161,8 @@ GEMINI_Model
 
   top_p
 
-  : model alters the way tokens are selected for output. It involves selecting tokens from the most probable to the least probable until their cumulative probability equals the topP value. For example, if tokens A, B, and C have probabilities of 0.3, 0.2, and 0.1, and the topP value is 0.5, the model picks either A or B as the next token using temperature sampling, excluding C. The default topP value is 0.95. This parameter helps filter the most probable tokens and exclude less probable ones.
+  : model alters the way tokens are selected for output. It involves selecting tokens from the most probable to the least probable until their cumulative probability equals the topP value.
+  For example, if tokens A, B, and C have probabilities of 0.3, 0.2, and 0.1, and the topP value is 0.5, the model picks either A or B as the next token using temperature sampling, excluding C. The default topP value is 0.95. This parameter helps filter the most probable tokens and exclude less probable ones.
 
 top_K
 
@@ -221,7 +222,7 @@ top_K
     gemini
     ```
 
-## Command Line Arguments
+## Command-Line Arguments
 
   **--text**
     : Start Conversation with the Text-to-Text Mode. (Default)

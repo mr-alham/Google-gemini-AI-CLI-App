@@ -56,7 +56,6 @@ func configFile() (string, error) {
 
 	return "", fmt.Errorf("configuration file not found")
 }
-// const configFile = "/usr/local/etc/gemini/keys.json"
 
 func main() {
 	err := welcomeBanner()
