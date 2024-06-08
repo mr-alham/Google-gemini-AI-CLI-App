@@ -38,6 +38,26 @@ type Config struct {
 	} `json:"SAFETY_SETTINGS"`
 }
 
+func configFile() (string, error) {
+	path1 := "/usr/local/etc/Gemini/keys.json"
+	path2 := "Gemini/keys.json"
+
+	if _, err := os.Stat(path1); err == nil {
+		return path1, nil
+	} else if !os.IsNotExist(err) {
+		return "", fmt.Errorf("error accessing %s: %v", path1, err)
+	}
+
+	if _, err := os.Stat(path2); err == nil {
+		return path2, nil
+	} else if !os.IsNotExist(err) {
+		return "", fmt.Errorf("error accessing %s: %v", path2, err)
+	}
+
+	return "", fmt.Errorf("configuration file not found")
+}
+// const configFile = "/usr/local/etc/gemini/keys.json"
+
 func main() {
 	err := welcomeBanner()
 	if err != nil {
@@ -474,9 +494,13 @@ func welcomeBanner() error {
 
 func loadConfig() (*Config, error) {
 	// if you intend to use a different file for json specify it here
-	const configFile = "Gemini_Ai_Config/keys.json"
+	dataFile, err := configFile()
 
-	file, err := os.Open(configFile)
+	if err != nil {
+		log.Panic("Error couldn't find the config file")
+	}
+
+	file, err := os.Open(dataFile)
 	if err != nil {
 		log.Panic("Error opening config file: ", err)
 	}
