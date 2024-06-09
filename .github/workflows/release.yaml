@@ -4,7 +4,7 @@ name: Release to GitHub
 on:
   push:
     branches: main
-    paths: main.go
+    # paths: main.go
 
 jobs:
   Build-and-Release:
@@ -19,7 +19,7 @@ jobs:
         with:
           sparse-checkout: |
             'main.go'
-            gemini.conf.d
+            'gemini.conf.d/'
 
       - name: Setup Go
         uses: actions/setup-go@v5
