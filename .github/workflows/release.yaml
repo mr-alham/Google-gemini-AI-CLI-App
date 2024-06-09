@@ -5,6 +5,9 @@ on:
   push:
     branches: main
     paths: main.go
+  pull_request:
+    branches: main
+    paths: main.go
 
 jobs:
   Build-and-Release:
