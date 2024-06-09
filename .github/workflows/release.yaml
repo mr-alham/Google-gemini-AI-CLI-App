@@ -46,12 +46,15 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Archive gemini app and config directory
+        run: zip -r Gemini-AI-CLI-App.zip gemini gemini.conf.d
+
       - name: Upload Release Binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./gemini,./gemini.conf.d/keys.json
+          asset_path: './Gemini-AI-CLI-App.zip'
           asset_name: gemini
-          asset_content_type: application/octet-stream
+          asset_content_type: application/zip
