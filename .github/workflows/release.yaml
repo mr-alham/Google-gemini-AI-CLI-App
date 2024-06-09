@@ -41,10 +41,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
+          tag_name: "v1.0.${{ github.run_number }}"
           release_name: Gemini-AI CLI App
           draft: false
           prerelease: false
+          body: Automated Release.
 
       - name: Archive gemini app and config directory
         run: zip -r Gemini-AI-CLI-App.zip gemini gemini.conf.d
@@ -56,5 +57,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "./Gemini-AI-CLI-App.zip"
-          asset_name: gemini
+          asset_name: Gemini-AI-CLI-App.zip
           asset_content_type: application/zip
