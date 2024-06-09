@@ -217,7 +217,6 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		defaultListIndent = 2
 	)
 
-	// DarkStyleConfig is the default dark style.
 	customStylingConfig := ansi.StyleConfig{
 		Document: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
