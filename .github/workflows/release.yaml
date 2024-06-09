@@ -16,10 +16,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            'main.go'
-            'gemini.conf.d/'
+        # with:
+        #   sparse-checkout: |
+            # 'main.go'
+            # 'gemini.conf.d/'
 
       - name: Setup Go
         uses: actions/setup-go@v5
