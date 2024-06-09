@@ -28,8 +28,8 @@ jobs:
           check-latest: true
 
       - name: Module Maintanance
-        run: go mod init "github.com/${{ github.repository }}"
-      - run: go mod tidy
+        # run: go mod init "github.com/${{ github.repository }}"
+        run: go mod tidy
       - run: go mod verify
 
       - name: Build
