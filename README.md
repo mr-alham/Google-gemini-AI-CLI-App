@@ -229,19 +229,19 @@ The application can be configured with a single configuration file `keys.json`. 
 
 ## Command-Line Arguments
 
-  * **--text**
-    * Start Conversation with the Text-to-Text Mode. (Default)
+* **--text**
+  * Start Conversation with the Text-to-Text Mode. (Default)
 
-  * **--image**
-    * Start Conversation with the Multi-Mode Model.
-      This model will allow you to give inputs as Text as well as Image
-      * **When asking for the path of the image you can,**
-        * Type the path (absolute path)
-        * Copy the image path to the Clipboard and hit Enter
-        * Drag and drop the image to the Terminal
+* **--image**
+  * Start Conversation with the Multi-Mode Model.
+    This model will allow you to give inputs as Text as well as Image
+    * **When asking for the path of the image you can,**
+      * Type the path (absolute path)
+      * Copy the image path to the Clipboard and hit Enter
+      * Drag and drop the image to the Terminal
 
-  * **-h**, **--help**
-    * Shows help menu and exit
+* **-h**, **--help**
+  * Shows help menu and exit
 
 ## Examples
 
