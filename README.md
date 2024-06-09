@@ -4,7 +4,9 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 
 [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql) [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-![Example Screenshot of using Text-to-Text model](https://i.imgur.com/Gu1wsO5.png "Demo Screenshot of Using Text-to-Text model")
+<p align="center">
+  <img src="https://i.ibb.co/p37NzwH/AI-Generated-Spam-Love-Letter.png" alt="Demo Screenshot of Using Text-to-Text model">
+</p>
 
 ## Table of Contents
 
@@ -46,6 +48,21 @@ Create an API key from [Google AI Studio](https://aistudio.google.com/app/apikey
 version 1.20 or higher
 
 ## Installation
+**Download the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the zip file and use directly without building/compiling.**
+
+If you are a Linux user,
+
+```sh
+# first navigate to the directory where the zip file is
+unzip Gemini-AI-CLI-App.zip
+chmod +x gemini
+./gemini
+```
+
+Follow these steps on topic [#Usage Method 3](#usage), to use gemini as a regular command.
+You have to setup the API key [As shown here](#configuration-explanation)
+
+***OR***
 
 1. **Clone the Repository**
 
@@ -279,8 +296,10 @@ The application can be configured with a single configuration file `keys.json`. 
   ```
 
   <p align="center">
-    <img src="https://i.ibb.co/qgH9CPN/Gemini-AI-Terminal-Session.png" alt="Screenshot of building gemini and executing the executable">
+    <img src="https://i.ibb.co/KwFF4CB/Gemini-AI-Ready-for-Image-Mode.png" alt="Screenshot of building gemini and executing the executable">
 </p>
+
+***The same project in python can be found at: [mr-alham/Google-Gemini-AI-on-the-Terminal](https://github.com/mr-alham/Google-Gemini-AI-on-the-Terminal), But it is deprecated.***
 
 ## License
 
