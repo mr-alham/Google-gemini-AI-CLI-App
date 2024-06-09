@@ -2,7 +2,7 @@
 
 GeminiAI-Terminal is a powerful command-line interface (CLI) application that leverages Google's Gemini AI to generate text based on user prompts. This allows users to interact with advanced AI capabilities directly from their terminal, making it an essential tool for developers, and AI enthusiasts who prefer a terminal workflow.
 
-[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql)
+[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql) [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 ![Example Screenshot of using Text-to-Text model](https://i.imgur.com/Gu1wsO5.png "Demo Screenshot of Using Text-to-Text model")
 
@@ -16,8 +16,8 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 
 * [Configuration](#configuration)
   * [Configuration Explanation](#configuration-explanation)
-  * [Safety]()
-    
+  * [Safety Settings](#safety-settings)
+
 * [Usage](#usage)
 
 * [Command-Line Arguments](#command-line-arguments)
@@ -135,11 +135,11 @@ The application can be configured with a single configuration file `keys.json`. 
 
   * Your API key for accessing the Gemini AI services. This is required to authenticate your requests.
     Replace `your gemini api key` with your API key
-    
+
     ```json
     { "GEMINI_API_KEY": "your gemini api key" }
     ```
-    
+
 * **GEMINI_Model**
 
   * Generative AI models are able to create content from varying types of data input including text, images and audio.
@@ -154,13 +154,13 @@ The application can be configured with a single configuration file `keys.json`. 
 * **SYSTEM_INSTRUCTION**
 
   * System instructions enable users to steer the behavior of the model based on their specific needs and use cases
-      
+
       ```json
       "SYSTEM_INSTRUCTION": "You are a cat. Your name is Neko."
       ```
 
 * **Temperature**
-  
+
   * The temperature controls the degree of randomness in token selection
   The temperature can be changed in the range of 0 to 1
 
@@ -229,19 +229,19 @@ The application can be configured with a single configuration file `keys.json`. 
 
 ## Command-Line Arguments
 
-  **--text**
-    : Start Conversation with the Text-to-Text Mode. (Default)
+  * **--text**
+    * Start Conversation with the Text-to-Text Mode. (Default)
 
-  **--image**
-    : Start Conversation with the Multi-Mode Model.
+  * **--image**
+    * Start Conversation with the Multi-Mode Model.
       This model will allow you to give inputs as Text as well as Image
-        - **When asking for the path of the image you can,**
-            - Type the path (absolute path)
-            - Copy the image path to the Clipboard and hit Enter
-            - Drag and drop the image to the Terminal
+      * **When asking for the path of the image you can,**
+        * Type the path (absolute path)
+        * Copy the image path to the Clipboard and hit Enter
+        * Drag and drop the image to the Terminal
 
-  **-h**, **--help**
-    : Shows help menu and exit
+  * **-h**, **--help**
+    * Shows help menu and exit
 
 ## Examples
 
@@ -253,6 +253,7 @@ The application can be configured with a single configuration file `keys.json`. 
     <img src="https://i.ibb.co/vcXGHHR/Gemini-AI-on-Terminal.png" alt="screenshot of running gemini code directly without compiling">
 </p>
 
+---
   ```sh
   go build -o gemini
   ./gemini
@@ -262,17 +263,24 @@ The application can be configured with a single configuration file `keys.json`. 
     <img src="https://i.ibb.co/qgH9CPN/Gemini-AI-Terminal-Session.png" alt="Screenshot of building gemini and executing the executable">
 </p>
 
+---
   ```sh
   gemini
   ```
 
+---
   ```sh
   gemini --help
   ```
 
+---
   ```sh
   gemini --image
   ```
+
+  <p align="center">
+    <img src="https://i.ibb.co/qgH9CPN/Gemini-AI-Terminal-Session.png" alt="Screenshot of building gemini and executing the executable">
+</p>
 
 ## License
 

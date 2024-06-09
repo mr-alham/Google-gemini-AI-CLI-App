@@ -1,0 +1,57 @@
+---
+name: Release the Binary to GitHub Release
+
+on:
+  push:
+    branches: main
+    paths: main.go
+
+jobs:
+  Build-and-Release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            'main.go'
+            gemini.conf.d
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.20"
+          check-latest: true
+
+      - name: Module Maintanance
+        run: go mod init "github.com/${{ github.repository }}"
+      - run: go mod tidy
+      - run: go mod verify
+
+      - name: Build
+        run: go build -a -o gemini
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: Linux
+          release_name: Gemini-AI CLI App
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./gemini,./gemini.conf.d/keys.json
+          asset_name: gemini
+          asset_content_type: application/octet-stream
