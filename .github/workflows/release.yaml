@@ -1,5 +1,5 @@
 ---
-name: Release the Binary to GitHub Release
+name: Release to GitHub
 
 on:
   push:
