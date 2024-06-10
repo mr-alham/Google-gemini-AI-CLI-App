@@ -42,7 +42,7 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 
 ## Prerequisites
 
-* **Gemini-API kEY**
+* **Gemini API Key**
 To use this app, you'll need an API key. If you don't already have one, create a key in Google AI Studio
 Create an API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
