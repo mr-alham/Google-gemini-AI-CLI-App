@@ -15,6 +15,8 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 * [Prerequisites](#prerequisites)
 
 * [Installation](#installation)
+  * [Execute-Directly](#run-the-binary)
+  * []()
 
 * [Configuration](#configuration)
   * [Configuration Explanation](#configuration-explanation)
@@ -47,10 +49,20 @@ Create an API key from [Google AI Studio](https://aistudio.google.com/app/apikey
 * **Go**
 version 1.20 or higher
 
-## Installation
-**Download the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the zip file and use directly without building/compiling.**
+* **For best experience, use Gemini AI with Yakuake terminal to feel the productivity boost** (optional)
+  ```sh
+  sudo pacman -S yakuake
+  ```
 
-If you are a Linux user,
+## Installation
+
+### Run the Binary
+
+Use the app directly withour Compiling or downloading dependencies,
+
+Download latest version of the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the zip file and Execute as shown below.
+
+#### For Linux users,
 
 ```sh
 # first navigate to the directory where the zip file is
@@ -59,10 +71,14 @@ chmod +x gemini
 ./gemini
 ```
 
-Follow these steps on topic [#Usage Method 3](#usage), to use gemini as a regular command.
 You have to setup the API key [As shown here](#configuration-explanation)
 
-***OR***
+Follow these steps on topic [#Usage Method 3](#usage), to use gemini as a regular Linux command.
+
+>! Only tested on Linux
+
+---
+#### Compile/Build the program
 
 1. **Clone the Repository**
 
