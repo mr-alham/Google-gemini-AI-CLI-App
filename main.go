@@ -39,6 +39,7 @@ type Config struct {
 }
 
 func configFile() (string, error) {
+	// first the script will check for config file on /usr/local/etc directory, if it doesn't exist check on current working directory
 	path1 := "/usr/local/etc/gemini.conf.d/keys.json"
 	path2 := "gemini.conf.d/keys.json"
 
