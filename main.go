@@ -330,8 +330,10 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		},
 		Code: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
-				Prefix:          " ",
-				Suffix:          " ",
+				BlockPrefix:     "'",
+				BlockSuffix:     "'",
+				Prefix:          "",
+				Suffix:          "",
 				Color:           stringPtr("203"),
 				BackgroundColor: stringPtr("236"),
 			},
@@ -339,9 +341,12 @@ func printResponse(resp *genai.GenerateContentResponse) {
 		CodeBlock: ansi.StyleCodeBlock{
 			StyleBlock: ansi.StyleBlock{
 				StylePrimitive: ansi.StylePrimitive{
-					Color: stringPtr("244"),
+					// "\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m"
+					BlockPrefix: "\033[0;1;2;93m" + strings.Repeat("─", (width/2)-14) + " </> " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
+					BlockSuffix: "\n\033[0;1;2;93m" + strings.Repeat("─", (width/2)-12) + " 🝔 " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
+					Color:       stringPtr("244"),
 				},
-				Margin: uintPtr(defaultMargin),
+				Margin: uintPtr(defaultMargin + 4),
 			},
 			Chroma: &ansi.Chroma{
 				Text: ansi.StylePrimitive{
