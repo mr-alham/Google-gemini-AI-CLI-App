@@ -55,6 +55,9 @@ version 1.20 or higher
   ```
 
 ## Installation
+**Download the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the ZIP file and use directly without building/compiling.**
+
+## Installation
 
 ### Run the Binary
 
