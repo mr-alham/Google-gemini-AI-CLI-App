@@ -4,6 +4,9 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 
 [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql) [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
+<!--START_SECTION:waka-->
+<!--END_SECTION:waka-->
+
 <p align="center">
   <img src="https://i.ibb.co/p37NzwH/AI-Generated-Spam-Love-Letter.png" alt="Demo Screenshot of Using Text-to-Text model">
 </p>
