@@ -1,0 +1,35 @@
+name: Waka Readme
+
+on:
+  push:
+    branches: main
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  update-readme:
+    name: WakaReadme DevMetrics
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: athul/waka-readme@master # this action name
+        with:
+          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+        # #   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # #   REPOSITORY: mr-alham/mr-alham
+          SHOW_TITLE: true
+          #   SECTION_NAME: waka
+        #   BLOCKS: ->
+          TIME_RANGE: all_time
+          LANG_COUNT: 10
+          SHOW_TIME: true
+          SHOW_MASKED_TIME: true
+          SHOW_TOTAL: true
+
+        #   COMMIT_MESSAGE: "[automated] Updated waka-readme graph with new metrics"
+        #   COMMITTER_NAME: "[bot]WakaGithubActions"
+
+        #   SECTION_NAME: waka # optional
+          BLOCKS: ░▒▓█ # optional
+          CODE_LANG: rust # optional

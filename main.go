@@ -342,8 +342,8 @@ func printResponse(resp *genai.GenerateContentResponse) {
 			StyleBlock: ansi.StyleBlock{
 				StylePrimitive: ansi.StylePrimitive{
 					// "\033[0;1;2;95m"+strings.Repeat("─", width-3), "\033[0;37m"
-					BlockPrefix: "\033[0;1;2;93m" + strings.Repeat("─", (width/2)-14) + " </> " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
-					BlockSuffix: "\n\033[0;1;2;93m" + strings.Repeat("─", (width/2)-12) + " 🝔 " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
+					BlockPrefix: "\033[0;2;93m" + strings.Repeat("─", (width/2)-14) + " </> " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
+					BlockSuffix: "\n\033[0;2;93m" + strings.Repeat("─", (width/2)-16) + " 🝔 " + strings.Repeat("─", (width/2)-10) + "\033[0;37m\n",
 					Color:       stringPtr("244"),
 				},
 				Margin: uintPtr(defaultMargin + 4),
