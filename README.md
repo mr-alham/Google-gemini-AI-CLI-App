@@ -2,7 +2,15 @@
 
 GeminiAI-Terminal is a powerful command-line interface (CLI) application that leverages Google's Gemini AI to generate text based on user prompts. This allows users to interact with advanced AI capabilities directly from their terminal, making it an essential tool for developers, and AI enthusiasts who prefer a terminal workflow.
 
-[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql) [![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+![GitHub Created At](https://img.shields.io/github/created-at/mr-alham/Google-gemini-AI-CLI-App)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/mr-alham/Google-gemini-AI-CLI-App?label=Total%20Commits)
+![GitHub Release](https://img.shields.io/github/v/release/mr-alham/Google-gemini-AI-CLI-App)
+
+[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql)
+[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
+![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=mr-alham&repo=Google-gemini-AI-CLI-App&theme=dracula)
 
 <!--START_SECTION:waka-->
 <!--END_SECTION:waka-->
@@ -18,11 +26,11 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 * [Prerequisites](#prerequisites)
 
 * [Installation](#installation)
-  * [Execute-Directly](#run-the-binary)
-  * []()
+  * [Execute the Binary Directly - Quick & Easy method](#run-the-binary-quick-and-easy-method)
+  * [Compile and Build the Executable](#compilebuild-the-program)
 
 * [Configuration](#configuration)
-  * [Configuration Explanation](#configuration-explanation)
+  * [Configuration Explanation](#run-the-binary-quick-and-easy-method)
   * [Safety Settings](#safety-settings)
 
 * [Usage](#usage)
@@ -53,22 +61,22 @@ Create an API key from [Google AI Studio](https://aistudio.google.com/app/apikey
 version 1.20 or higher
 
 * **For best experience, use Gemini AI with Yakuake terminal to feel the productivity boost** (optional)
+
   ```sh
   sudo pacman -S yakuake
   ```
 
 ## Installation
+
+### Run the Binary (Quick and easy method)
+
 **Download the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the ZIP file and use directly without building/compiling.**
 
-## Installation
+Use the app directly without Compiling or downloading dependencies,
 
-### Run the Binary
+Download latest version of the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the ZIP file and Execute as shown below.
 
-Use the app directly withour Compiling or downloading dependencies,
-
-Download latest version of the app from [GitHub Release](https://github.com/mr-alham/Google-gemini-AI-CLI-App/releases/), Extract the zip file and Execute as shown below.
-
-#### For Linux users,
+#### For Linux users
 
 ```sh
 # first navigate to the directory where the zip file is
@@ -84,6 +92,7 @@ Follow these steps on topic [#Usage Method 3](#usage), to use gemini as a regula
 >! Only tested on Linux
 
 ---
+
 #### Compile/Build the program
 
 1. **Clone the Repository**
@@ -293,6 +302,7 @@ The application can be configured with a single configuration file `keys.json`. 
 </p>
 
 ---
+
   ```sh
   go build -o gemini
   ./gemini
@@ -303,16 +313,19 @@ The application can be configured with a single configuration file `keys.json`. 
 </p>
 
 ---
+
   ```sh
   gemini
   ```
 
 ---
+
   ```sh
   gemini --help
   ```
 
 ---
+
   ```sh
   gemini --image
   ```
