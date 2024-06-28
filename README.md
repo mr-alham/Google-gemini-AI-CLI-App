@@ -6,11 +6,9 @@ GeminiAI-Terminal is a powerful command-line interface (CLI) application that le
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/mr-alham/Google-gemini-AI-CLI-App?label=Total%20Commits)
 ![GitHub Release](https://img.shields.io/github/v/release/mr-alham/Google-gemini-AI-CLI-App)
 
-[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
-[![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)](https://github.com/marketplace/actions/codeql)
-[![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
-
-![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=mr-alham&repo=Google-gemini-AI-CLI-App&theme=dracula)
+![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/linter.yaml/badge.svg)
+![CodeQl](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/codeQl.yaml/badge.svg)
+![Super-Linter](https://github.com/mr-alham/Google-gemini-AI-CLI-App/actions/workflows/release.yaml/badge.svg)
 
 <!--START_SECTION:waka-->
 <!--END_SECTION:waka-->
