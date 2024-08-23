@@ -18,6 +18,10 @@ import (
 	terminal "golang.org/x/term"
 )
 
+// color of the Error message
+const errorColor string = "\033[0;2;38;5;196m"
+const resetColor string = "\033[0m"
+
 // getting configuration data from the json file
 type Config struct {
 	GeminiAPIKey      string `json:"GEMINI_API_KEY"`
@@ -61,7 +65,7 @@ func configFile() (string, error) {
 func main() {
 	err := welcomeBanner()
 	if err != nil {
-		fmt.Println("Error:")
+		fmt.Println(errorColor, "Error:", err, resetColor)
 	}
 
 	config, err := loadConfig()
@@ -90,7 +94,7 @@ func main() {
 	} else {
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
-			fmt.Println("Error:")
+			fmt.Println(errorColor, "Error:", err, resetColor)
 		}
 	}
 }
@@ -117,14 +121,14 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 		pathToImage = scanner.Text()
 
 		if err := scanner.Err(); err != nil {
-			fmt.Println("Error scanning file: ", err)
+			fmt.Println(errorColor, "Error scanning file: ", err, resetColor)
 			continue
 		}
 
 		if pathToImage == "" {
 			clipboardContent, err := clipboard.ReadAll()
 			if err != nil {
-				fmt.Println("Error Reading Clipboard: ", err)
+				fmt.Println(errorColor, "Error Reading Clipboard: ", err, resetColor)
 				continue
 			}
 			pathToImage = clipboardContent
@@ -134,13 +138,13 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 			fmt.Println()
 			err := generateTextFromPrompt(ctx, model)
 			if err != nil {
-				fmt.Println("Error:", err)
+				fmt.Println(errorColor, "Error:", err, resetColor)
 			}
 		}
 
 		imgData, err := os.ReadFile(pathToImage)
 		if err != nil {
-			fmt.Println("Error reading image file: ", err)
+			fmt.Println(errorColor, "Error reading image file: ", err, resetColor)
 			continue
 		}
 
@@ -149,7 +153,7 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 		userPrompt = scanner.Text()
 
 		if Err := scanner.Err(); Err != nil {
-			fmt.Println("Error scanning prompt: ", Err)
+			fmt.Println(errorColor, "Error scanning prompt: ", Err, resetColor)
 			continue
 		}
 
@@ -160,7 +164,7 @@ func generateTextFromImage(ctx context.Context, model *genai.GenerativeModel) er
 
 		resp, err := model.GenerateContent(ctx, prompt...)
 		if err != nil {
-			fmt.Println("Error generating content: ", err)
+			fmt.Println(errorColor, "Error generating content: ", err, resetColor)
 			continue
 		}
 		printResponse(resp)
@@ -187,23 +191,23 @@ func generateTextFromPrompt(ctx context.Context, model *genai.GenerativeModel) e
 		userPrompt = scanner.Text()
 
 		if err := scanner.Err(); err != nil {
-			fmt.Println("Error scanning prompt: ", err)
+			fmt.Println(errorColor, "Error scanning prompt: ", err, resetColor)
 			continue
 
 		} else if userPrompt == "" {
-			fmt.Println("The Prompt is empty.")
+			// fmt.Println(errorColor, "The Prompt is empty")
 			continue
 		} else if strings.ToLower(userPrompt) == "image mode" {
 			fmt.Println()
 			err := generateTextFromImage(ctx, model)
 			if err != nil {
-				fmt.Println("Error:")
+				fmt.Println(errorColor, "Error:", resetColor)
 			}
 		}
 
 		resp, err := cs.SendMessage(ctx, genai.Text(userPrompt))
 		if err != nil {
-			fmt.Println("Error sending message: ", err)
+			fmt.Println(errorColor, "Error sending message: ", err, resetColor)
 			continue
 		}
 		printResponse(resp)
@@ -453,7 +457,7 @@ func printResponse(resp *genai.GenerateContentResponse) {
 	)
 
 	if err != nil {
-		fmt.Println("Error rendering glamour output", err)
+		fmt.Println(errorColor, "Error rendering glamour output", err, resetColor)
 	}
 
 	fmt.Print("\033[0;1;38;5;28m\nResponse: \033[0;38;5;254m")
@@ -582,24 +586,24 @@ func handleArgs(ctx context.Context, model *genai.GenerativeModel, args []string
 	case "--image":
 		err := generateTextFromImage(ctx, model)
 		if err != nil {
-			fmt.Println("Error:")
+			fmt.Println(errorColor, "Error:", resetColor)
 		}
 	case "--text":
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
-			fmt.Println("Error:")
+			fmt.Println(errorColor, "Error:", resetColor)
 		}
 	case "--help":
 		help()
 	case "-h":
 		help()
 	default:
-		fmt.Println("Error `" + args[1] + "` not identified.")
+		fmt.Println(errorColor, "Error `"+args[1]+"` not identified.", resetColor)
 		fmt.Println("Redirecting to Text-to-Text Model...")
 		fmt.Println()
 		err := generateTextFromPrompt(ctx, model)
 		if err != nil {
-			fmt.Println("Error:")
+			fmt.Println(errorColor, "Error:", resetColor)
 		}
 	}
 }
