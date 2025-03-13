@@ -1,12 +1,13 @@
 module github.com/mr-alham/Google-gemini-AI-CLI-App
 
 go 1.22.6
+toolchain go1.23.7
 
 require (
 	github.com/atotto/clipboard v0.1.4
 	github.com/charmbracelet/glamour v0.8.0
 	github.com/google/generative-ai-go v0.17.0
-	golang.org/x/term v0.23.0
+	golang.org/x/term v0.29.0
 	google.golang.org/api v0.194.0
 )
 
@@ -47,12 +48,12 @@ require (
 	go.opentelemetry.io/otel v1.26.0 // indirect
 	go.opentelemetry.io/otel/metric v1.26.0 // indirect
 	go.opentelemetry.io/otel/trace v1.26.0 // indirect
-	golang.org/x/crypto v0.26.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
 	golang.org/x/oauth2 v0.22.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240725223205-93522f1f2a9f // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
